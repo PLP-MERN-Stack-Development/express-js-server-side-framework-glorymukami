@@ -1,8 +1,8 @@
 // server.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const connectDB = require('../config/db');
-const config = require('../config');
+const connectDB = require('./config/db');
+const config = require('./config');
 const logger = require('./middleware/logger');
 const auth = require('./middleware/auth');
 const productRoutes = require('./routes/products');
