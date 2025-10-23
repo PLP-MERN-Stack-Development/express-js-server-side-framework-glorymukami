@@ -1,187 +1,221 @@
-Express.js – RESTful API (Week 2 Assignment)
-📘 Project Overview
+# Express.js Products API - Week 2 Assignment
 
-This project is a RESTful API built with Express.js as part of the Power Learn Project (PLP) – MERN Stack Development Course.
-It performs full CRUD operations on a products resource, with proper routing, middleware, and MongoDB integration.
+A complete RESTful API for managing products built with Express.js, MongoDB, and modern backend practices.
 
-🧠 Objective
+## 🚀 Features
 
-To build a server-side application using Express.js that:
+- **Full CRUD Operations** - Create, Read, Update, Delete products
+- **Authentication** - API key-based security for protected routes
+- **Advanced Filtering** - Filter by category, stock status
+- **Search Functionality** - Search products by name
+- **Pagination** - Efficient data loading with page limits
+- **Product Statistics** - Analytics and category insights
+- **Input Validation** - Robust data validation middleware
+- **Error Handling** - Custom error classes and global error handling
+- **Logging** - Request logging middleware
 
-Implements Create, Read, Update, Delete (CRUD) operations.
+## 🛠️ Technologies Used
 
-Uses middleware for logging, authentication, and validation.
+- **Express.js** - Web framework
+- **MongoDB** - Database with Mongoose ODM
+- **Body-parser** - Request body parsing
+- **Dotenv** - Environment variables
+- **UUID** - Unique identifier generation
 
-Handles errors gracefully.
+## 📦 Installation & Setup
 
-Connects to a MongoDB database (via Compass or Atlas).
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- MongoDB Compass (local instance)
+- Postman (for API testing)
 
-Supports filtering, pagination, and search.
+### Installation Steps
 
-🛠️ Technologies Used
+1. **Clone the repository**
+   ```bash
+   git clone <your-repository-url>
+   cd express-js-server-side-framework-glorymukami
+Install dependencies
 
-Node.js
-
-Express.js
-
-MongoDB (Local using Compass)
-
-Mongoose
-
-dotenv
-
-body-parser
-
-Postman (for API testing)
-
-⚙️ Setup Instructions
-1️⃣ Clone the Repository
-git clone https://github.com/YOUR_USERNAME/express-js-server-side-framework-glorymukami.git
-cd express-js-server-side-framework-glorymukami
-
-2️⃣ Install Dependencies
+bash
 npm install
+Environment Configuration
+Create a .env file in the root directory:
 
-3️⃣ Configure Environment Variables
-
-Create a .env file in the project root and add:
-
-MONGO_URI=mongodb://127.0.0.1:27017/express_api_db
+env
+# Server Configuration
 PORT=3000
-API_KEY=12345
+NODE_ENV=development
 
+# Database
+MONGODB_URI=mongodb://localhost:27017/week2_assignment
 
-💡 Also include a .env.example file with placeholder values for submission.
+# Security
+API_KEY=your-secret-api-key-123
+Start MongoDB
 
-4️⃣ Start MongoDB
+Ensure MongoDB Compass is running on localhost:27017
 
-Ensure your local MongoDB server is running.
-Then open MongoDB Compass and connect to:
+Run the application
 
-mongodb://127.0.0.1:27017
+bash
+# Development mode with auto-restart
+npm run dev
 
-5️⃣ Run the Server
+# Production mode
 npm start
-
-
-Or:
-
-node server.js
-
-
-You should see:
-
-✅ MongoDB Connected Successfully
-🚀 Server running on port 3000
-
-🧪 API Endpoints
-Method	Endpoint	Description
-GET	/api/products	Get all products (with optional filters, pagination, search)
-GET	/api/products/:id	Get a specific product by ID
-POST	/api/products	Create a new product
-PUT	/api/products/:id	Update an existing product
-DELETE	/api/products/:id	Delete a product
-GET	/api/products/stats/category	Get count of products by category
 🔑 Authentication
+Protected routes require an API key in the request headers:
 
-All /api/products routes require an API key in the headers:
+http
+x-api-key: your-secret-api-key-123
+Protected Routes: POST, PUT, DELETE operations
 
-x-api-key: 12345
+📋 API Endpoints
+🏠 Root & Info
+GET / - Server status and basic info
 
+GET /api - API documentation and available endpoints
 
-If the key is missing or incorrect, the API returns:
+📦 Products Management
+Method	Endpoint	Description	Auth Required
+GET	/api/products	Get all products with filtering	No
+GET	/api/products/:id	Get single product by ID	No
+POST	/api/products	Create new product	✅ Yes
+PUT	/api/products/:id	Update existing product	✅ Yes
+DELETE	/api/products/:id	Delete product	✅ Yes
+🔍 Advanced Features
+Method	Endpoint	Description	Parameters
+GET	/api/products/search	Search products	q (search query)
+GET	/api/products/stats	Product statistics	None
+🎯 Query Parameters
+For /api/products:
 
+category - Filter by category (e.g., ?category=electronics)
+
+inStock - Filter by stock status (e.g., ?inStock=true)
+
+page - Pagination page number (e.g., ?page=1)
+
+limit - Items per page (e.g., ?limit=10)
+
+For /api/products/search:
+
+q - Search query (e.g., ?q=phone)
+
+🧪 API Examples
+Get All Products
+http
+GET http://localhost:3000/api/products
+Get Products with Filtering
+http
+GET http://localhost:3000/api/products?category=electronics&inStock=true&page=1&limit=5
+Search Products
+http
+GET http://localhost:3000/api/products/search?q=phone
+Get Product Statistics
+http
+GET http://localhost:3000/api/products/stats
+Create a Product
+http
+POST http://localhost:3000/api/products
+Headers:
+  Content-Type: application/json
+  x-api-key: your-secret-api-key-123
+
+Body:
 {
-  "error": "Unauthorized. Invalid API Key."
-}
-
-🧱 Request Body Example (POST /api/products)
-{
-  "name": "Laptop",
-  "description": "High-performance laptop",
-  "price": 85000,
-  "category": "Electronics",
+  "name": "iPhone 15",
+  "description": "Latest smartphone",
+  "price": 999,
+  "category": "electronics",
   "inStock": true
 }
-
-🧩 Query Parameters
-Parameter	Type	Description
-category	string	Filter products by category
-search	string	Search products by name
-page	number	Page number for pagination
-limit	number	Number of products per page
-
-✅ Example:
-
-GET /api/products?category=Electronics&page=1&limit=5&search=laptop
-
-🧰 Middleware Implemented
-Middleware	Purpose
-logger.js	Logs request method, URL, and timestamp
-auth.js	Verifies API key for secure access
-validateProduct.js	Validates required fields for product creation/update
-Global Error Handler	Catches all application errors and sends structured responses
-📊 Advanced Features
-
-Filtering by category
-
-Search by product name
-
-Pagination for product listing
-
-Statistics endpoint showing product count by category
-
-🧭 Testing the API in Postman
-
-Open Postman
-
-Set x-api-key in Headers
-
-Test endpoints:
-
-GET http://localhost:3000/api/products
-
-POST http://localhost:3000/api/products
-
+Update a Product
+http
 PUT http://localhost:3000/api/products/:id
+Headers:
+  Content-Type: application/json
+  x-api-key: your-secret-api-key-123
 
+Body:
+{
+  "name": "Updated Product Name",
+  "price": 899
+}
+Delete a Product
+http
 DELETE http://localhost:3000/api/products/:id
-
-Observe data appear in MongoDB Compass under express_api_db → products
-
-🪲 Error Handling
-
-Examples of responses:
-
-Scenario	Status	Response
-Invalid API Key	401	{ "error": "Unauthorized. Invalid API Key." }
-Missing fields	400	{ "error": "Name and price are required." }
-Product not found	404	{ "error": "Product not found" }
-Server error	500	{ "error": "Internal Server Error" }
-📚 Folder Structure
-express-api/
-│
-├── server.js
-├── package.json
-├── .env
-├── .env.example
-├── README.md
+Headers:
+  x-api-key: your-secret-api-key-123
+📊 Response Format
+Success Response
+json
+{
+  "success": true,
+  "message": "Product created successfully",
+  "data": { ... }
+}
+Error Response
+json
+{
+  "success": false,
+  "message": "Error message",
+  "errors": ["Validation error details"]
+}
+Pagination Response
+json
+{
+  "success": true,
+  "count": 5,
+  "total": 25,
+  "page": 1,
+  "pages": 5,
+  "data": [ ... ]
+}
+🗂️ Project Structure
+text
+express-js-server-side-framework-glorymukami/
+├── server.js                 # Main application entry point
+├── package.json              # Dependencies and scripts
+├── .env                      # Environment variables (create this)
+├── .env.example              # Environment template
+├── README.md                 # This documentation
 │
 ├── models/
-│   └── Product.js
+│   └── Product.js           # Mongoose product model
 │
 ├── routes/
-│   └── products.js
+│   └── products.js          # Product routes and handlers
 │
 └── middleware/
-    ├── logger.js
-    ├── auth.js
-    └── validateProduct.js
+    ├── auth.js              # Authentication middleware
+    ├── logger.js            # Request logging
+    ├── validation.js        # Input validation
+    └── errors.js            # Custom error handlers
+🚦 Running Tests
+Use Postman or any API client to test the endpoints:
 
-👩‍💻 Author
+Start the server: npm run dev
 
-Name: Glory Mukami
-Course: Power Learn Project – MERN Stack Development
-Email: mukamiglory93@gmail.com
+Test root endpoint: GET http://localhost:3000/
 
-GitHub: gloryMukami
+Create products: Use POST endpoint with API key
+
+Test all CRUD operations
+
+Verify advanced features: Search, filter, statistics
+
+📝 Assignment Requirements Completed
+✅ Task 1: Express.js Setup
+✅ Task 2: RESTful API Routes (Full CRUD)
+✅ Task 3: Middleware Implementation (Logger, Auth, Validation)
+✅ Task 4: Error Handling (Custom errors, Global handler)
+✅ Task 5: Advanced Features (Filtering, Pagination, Search, Statistics)
+
+👨‍💻 Author
+Glory Mukami
+MERN Stack Development - Power Learn Project
+
+📄 License
+This project is created for educational purposes as part of the PLP MERN Stack Development program.

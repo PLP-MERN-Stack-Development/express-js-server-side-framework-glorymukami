@@ -1,10 +1,13 @@
-// middleware/auth.js
-const { apiKey } = require('../config');
+const { AuthenticationError } = require('./errors');
 
-module.exports = (req, res, next) => {
-  const key = req.headers['x-api-key'];
-  if (!key || key !== apiKey) {
-    return res.status(401).json({ error: 'Unauthorized. Invalid API Key.' });
-  }
-  next();
+const authenticate = (req, res, next) => {
+    const apiKey = req.headers['x-api-key'];
+    
+    if (!apiKey || apiKey !== process.env.API_KEY) {
+        throw new AuthenticationError('Invalid or missing API key');
+    }
+    
+    next();
 };
+
+module.exports = authenticate;
